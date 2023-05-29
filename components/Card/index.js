@@ -1,9 +1,10 @@
 import { Avatar, Button, Card as CardPaper, Text } from "react-native-paper";
+import { COLORS } from "../../assets/styles/color";
 
 const LeftContent = (props) => <Avatar.Icon {...props} icon="folder" />;
 
 export const Card = () => (
-  <CardPaper>
+  <CardPaper style={{ padding: 12 }}>
     <CardPaper.Title title="Name" subtitle="@username" left={LeftContent} />
     <CardPaper.Content>
       <Text variant="titleLarge">Liga - Jogo</Text>
@@ -11,8 +12,12 @@ export const Card = () => (
     </CardPaper.Content>
     <CardPaper.Cover source={{ uri: "https://picsum.photos/700" }} />
     <CardPaper.Actions>
-      <Button>Like</Button>
-      <Button>Unlike</Button>
+      <Button buttonColor={COLORS.PRIMARY} textColor={COLORS.LIGHT}>
+        Like
+      </Button>
+      <Button buttonColor={COLORS.RED} textColor={COLORS.LIGHT}>
+        Unlike
+      </Button>
     </CardPaper.Actions>
   </CardPaper>
 );

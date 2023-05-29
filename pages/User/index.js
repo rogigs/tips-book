@@ -1,60 +1,38 @@
-import { View, StyleSheet } from "react-native";
+import { StyleSheet } from "react-native";
 import { Text } from "react-native-paper";
 import { Avatar } from "react-native-paper";
-
+import { LinearGradient } from "expo-linear-gradient";
 import { WrapperScreenTabs } from "../../components/WrapperScreenTabs";
+import { COLORS } from "../../assets/styles/color";
 
 export default function User({ navigation }) {
   const openPost = () => navigation.navigate("Post");
 
   return (
     <WrapperScreenTabs openPost={openPost}>
-      <View style={styles.container}>
+      <LinearGradient
+        colors={[COLORS.SECONDARY, "transparent"]}
+        style={styles.container}
+      >
         <Avatar.Image size={24} source={require("../../assets/favicon.png")} />
         <Text style={styles.title}>Username</Text>
         <Text>@username</Text>
-        <View style={styles.containerNumbers}>
-          <View>
-            <Text>120</Text>
-            <Text>Greens</Text>
-          </View>
-          <View>
-            <Text>10</Text>
-            <Text>Reds</Text>
-          </View>
-          <View>
-            <Text>10</Text>
-            <Text>Seguidores</Text>
-          </View>
-          <View>
-            <Text>10</Text>
-            <Text>Seguindo</Text>
-          </View>
-        </View>
-      </View>
+      </LinearGradient>
     </WrapperScreenTabs>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: "gray",
+    backgroundColor: COLORS.PRIMARY,
     width: "100%",
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
-    height: 150,
+    height: 170,
   },
   title: {
     fontWeight: "bold",
     fontSize: 30,
-  },
-  containerNumbers: {
-    display: "flex",
-    flexDirection: "row",
-    gap: 24,
-    alignItems: "center",
-    textAlign: "center",
-    marginTop: 24,
   },
 });
