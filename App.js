@@ -1,10 +1,10 @@
-import User from "./pages/User";
-import Post from "./pages/Post";
+import User from "./src/pages/User";
+import Post from "./src/pages/Post";
 
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createMaterialBottomTabNavigator } from "@react-navigation/material-bottom-tabs";
-import Home from "./pages/Home";
+import Home from "./src/pages/Home";
 
 const Stack = createNativeStackNavigator();
 const Tab = createMaterialBottomTabNavigator();

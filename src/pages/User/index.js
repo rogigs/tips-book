@@ -1,11 +1,20 @@
 import { View, StyleSheet } from "react-native";
 import { Text } from "react-native-paper";
 import { Avatar } from "react-native-paper";
-
 import { WrapperScreenTabs } from "../../components/WrapperScreenTabs";
+import { useEffect, useState } from "react";
+import { getUsers } from "../../routes";
 
 export default function User({ navigation }) {
   const openPost = () => navigation.navigate("Post");
+
+  useEffect(() => {
+    console.log(
+      getUsers()
+        .then((data) => console.log(data))
+        .catch((e) => console.log(e))
+    );
+  }, []);
 
   return (
     <WrapperScreenTabs openPost={openPost}>
