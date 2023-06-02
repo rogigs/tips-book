@@ -18,6 +18,6 @@ const styles = {
     margin: 16,
     right: 0,
     bottom: 10,
-    backgroundColor: COLORS.PRIMARY,
+    backgroundColor: COLORS.SECONDARY,
   },
 };

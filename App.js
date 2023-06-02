@@ -1,5 +1,6 @@
 import User from "./pages/User";
 import Post from "./pages/Post";
+import Login from "./pages/Login";
 import { StyleSheet, TouchableOpacity } from "react-native";
 import { NavigationContainer, DefaultTheme } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
@@ -23,8 +24,8 @@ const WithTab = () => {
   return (
     <Tab.Navigator
       style={styles.tabNavigator}
-      barStyle={{ backgroundColor: COLORS.SECONDARY, color: COLORS.LIGHT }}
-      inactiveColor={COLORS.PRIMARY}
+      barStyle={{ backgroundColor: COLORS.PRIMARY, color: COLORS.LIGHT }}
+      inactiveColor={COLORS.SECONDARY}
       activeColor={COLORS.LIGHT}
       tabBarActiveBackgroundColor={COLORS.LIGHT}
       tabBarButton={(props) => <TouchableOpacity {...props} />}
@@ -45,7 +46,6 @@ const WithTab = () => {
           tabBarIcon: ({ color, size }) => (
             <Button icon="account" textColor={color} size={size} />
           ),
-          tabBarColor: "red",
         }}
       />
     </Tab.Navigator>
@@ -54,8 +54,13 @@ const WithTab = () => {
 const App = () => {
   return (
     <NavigationContainer theme={theme}>
-      <Stack.Navigator>
+      <Stack.Navigator initialRouteName="Login">
         <Stack.Screen name="Post" component={Post} />
+        <Stack.Screen
+          name="Login"
+          component={Login}
+          options={{ headerShown: false }}
+        />
         <Stack.Screen
           name="Tabs"
           component={WithTab}
