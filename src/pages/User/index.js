@@ -1,9 +1,10 @@
 import { StyleSheet } from "react-native";
 import { Text } from "react-native-paper";
 import { Avatar } from "react-native-paper";
-import { LinearGradient } from "expo-linear-gradient";
 import { WrapperScreenTabs } from "../../components/WrapperScreenTabs";
-import { COLORS } from "../../assets/styles/color";
+
+import { LinearGradient } from "expo-linear-gradient";
+import { COLORS } from "../../assets/styles/colors";
 
 export default function User({ navigation }) {
   const openPost = () => navigation.navigate("Post");

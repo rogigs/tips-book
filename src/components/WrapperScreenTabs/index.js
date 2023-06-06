@@ -1,6 +1,6 @@
 import { View, StyleSheet } from "react-native";
 import { ButtonFab } from "../ButtonFab";
-import { COLORS } from "../../assets/styles/color";
+import { COLORS } from "../../assets/styles/colors";
 
 export const WrapperScreenTabs = ({ openPost, children }) => {
   return (

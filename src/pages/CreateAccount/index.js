@@ -1,7 +1,7 @@
 import { View } from "react-native";
-import { TextInput, Button, Text } from "react-native-paper";
+import { TextInput, Button } from "react-native-paper";
 import { StyleSheet } from "react-native";
-import { COLORS } from "../../assets/styles/color";
+import { COLORS } from "../../assets/styles/colors";
 import { useState } from "react";
 
 const CreateAccount = ({ navigation }) => {

@@ -1,14 +1,14 @@
-import User from "./pages/User";
-import Post from "./pages/Post";
-import Login from "./pages/Login";
+import User from "./src/pages/User";
+import Post from "./src/pages/Post";
+import Login from "./src/pages/Login";
 import { StyleSheet, TouchableOpacity } from "react-native";
 import { NavigationContainer, DefaultTheme } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createMaterialBottomTabNavigator } from "@react-navigation/material-bottom-tabs";
-import Home from "./pages/Home";
-import { COLORS } from "./assets/styles/color";
+import Home from "./src/pages/Home";
+import { COLORS } from "./src/assets/styles/colors";
 import { Button } from "react-native-paper";
-import CreateAccount from "./pages/CreateAccount";
+import CreateAccount from "./src/pages/CreateAccount";
 
 const Stack = createNativeStackNavigator();
 const Tab = createMaterialBottomTabNavigator();
