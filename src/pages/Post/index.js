@@ -2,7 +2,7 @@ import { Text } from "react-native-paper";
 import { View } from "react-native";
 import { TextInput, IconButton } from "react-native-paper";
 import { StyleSheet } from "react-native";
-import { COLORS } from "../../assets/styles/color";
+import { COLORS } from "../../assets/styles/colors";
 import { useState } from "react";
 
 const Post = ({ navigation }) => {

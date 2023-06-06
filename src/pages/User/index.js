@@ -5,8 +5,7 @@ import { WrapperScreenTabs } from "../../components/WrapperScreenTabs";
 import { useEffect } from "react";
 import { getUsers } from "../../routes";
 import { LinearGradient } from "expo-linear-gradient";
-import { WrapperScreenTabs } from "../../components/WrapperScreenTabs";
-import { COLORS } from "../../assets/styles/color";
+import { COLORS } from "../../assets/styles/colors";
 
 export default function User({ navigation }) {
   const openPost = () => navigation.navigate("Post");

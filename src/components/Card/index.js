@@ -1,5 +1,5 @@
 import { Avatar, Button, Card as CardPaper, Text } from "react-native-paper";
-import { COLORS } from "../../assets/styles/color";
+import { COLORS } from "../../assets/styles/colors";
 
 const LeftContent = (props) => <Avatar.Icon {...props} icon="folder" />;
 

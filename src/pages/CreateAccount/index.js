@@ -1,10 +1,10 @@
 import { View } from "react-native";
 import { TextInput, Button } from "react-native-paper";
 import { StyleSheet } from "react-native";
-import { COLORS } from "../../assets/styles/color";
+import { COLORS } from "../../assets/styles/colors";
 import { useState } from "react";
 
-const Login = ({ navigation }) => {
+const CreateAccount = ({ navigation }) => {
   const [text, setText] = useState("");
 
   const onChangeText = (inputText) => {
@@ -18,22 +18,13 @@ const Login = ({ navigation }) => {
       <TextInput label="Senha" value={text} onChangeText={onChangeText} />
 
       <Button
-        mode="text"
-        size={32}
-        onPress={() => navigation.push("CreateAccount")}
-        textColor={COLORS.LIGHT}
-      >
-        Crie sua conta
-      </Button>
-
-      <Button
         mode="contained"
         size={32}
         onPress={() => navigation.push("Tabs")}
         buttonColor={COLORS.LIGHT}
         textColor={COLORS.SECONDARY}
       >
-        Entrar
+        Criar
       </Button>
     </View>
   );
@@ -60,4 +51,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Login;
+export default CreateAccount;

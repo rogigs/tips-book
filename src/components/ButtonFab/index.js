@@ -1,5 +1,5 @@
 import { FAB } from "react-native-paper";
-import { COLORS } from "../../assets/styles/color";
+import { COLORS } from "../../assets/styles/colors";
 
 export const ButtonFab = ({ openPost }) => {
   return (
