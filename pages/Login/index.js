@@ -1,11 +1,10 @@
-import { Text } from "react-native-paper";
 import { View } from "react-native";
-import { TextInput, IconButton, Button } from "react-native-paper";
+import { TextInput, Button } from "react-native-paper";
 import { StyleSheet } from "react-native";
 import { COLORS } from "../../assets/styles/color";
 import { useState } from "react";
 
-const Post = ({ navigation }) => {
+const Login = ({ navigation }) => {
   const [text, setText] = useState("");
 
   const onChangeText = (inputText) => {
@@ -21,7 +20,7 @@ const Post = ({ navigation }) => {
       <Button
         mode="text"
         size={32}
-        onPress={() => navigation.push("Tabs")}
+        onPress={() => navigation.push("CreateAccount")}
         textColor={COLORS.LIGHT}
       >
         Crie sua conta
@@ -61,4 +60,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Post;
+export default Login;
