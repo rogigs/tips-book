@@ -8,6 +8,7 @@ import { createMaterialBottomTabNavigator } from "@react-navigation/material-bot
 import Home from "./pages/Home";
 import { COLORS } from "./assets/styles/color";
 import { Button } from "react-native-paper";
+import CreateAccount from "./pages/CreateAccount";
 
 const Stack = createNativeStackNavigator();
 const Tab = createMaterialBottomTabNavigator();
@@ -55,12 +56,18 @@ const App = () => {
   return (
     <NavigationContainer theme={theme}>
       <Stack.Navigator initialRouteName="Login">
-        <Stack.Screen name="Post" component={Post} />
         <Stack.Screen
           name="Login"
           component={Login}
           options={{ headerShown: false }}
         />
+        <Stack.Screen
+          name="CreateAccount"
+          component={CreateAccount}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen name="Post" component={Post} />
+
         <Stack.Screen
           name="Tabs"
           component={WithTab}
