@@ -1,17 +1,6 @@
 import { FAB } from "react-native-paper";
 import { COLORS } from "../../assets/styles/colors";
 
-export const ButtonFab = ({ openPost }) => {
-  return (
-    <FAB
-      style={styles.fab}
-      icon="plus"
-      onPress={openPost}
-      color={COLORS.LIGHT}
-    />
-  );
-};
-
 const styles = {
   fab: {
     position: "absolute",
@@ -21,3 +10,16 @@ const styles = {
     backgroundColor: COLORS.SECONDARY,
   },
 };
+
+
+export function ButtonFab({ openPost }) {
+  return (
+    <FAB
+      style={styles.fab}
+      icon="plus"
+      onPress={openPost}
+      color={COLORS.LIGHT}
+    />
+  );
+}
+
