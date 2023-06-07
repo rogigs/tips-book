@@ -1,27 +1,10 @@
 import { StyleSheet } from "react-native";
 import { Text } from "react-native-paper";
-import { Avatar } from "react-native-paper";
-import { WrapperScreenTabs } from "../../components/WrapperScreenTabs";
 
 import { LinearGradient } from "expo-linear-gradient";
+import { WrapperScreenTabs } from "../../components/WrapperScreenTabs";
+
 import { COLORS } from "../../assets/styles/colors";
-
-export default function User({ navigation }) {
-  const openPost = () => navigation.navigate("Post");
-
-  return (
-    <WrapperScreenTabs openPost={openPost}>
-      <LinearGradient
-        colors={[COLORS.SECONDARY, "transparent"]}
-        style={styles.container}
-      >
-        <Avatar.Image size={24} source={require("../../assets/favicon.png")} />
-        <Text style={styles.title}>Username</Text>
-        <Text>@username</Text>
-      </LinearGradient>
-    </WrapperScreenTabs>
-  );
-}
 
 const styles = StyleSheet.create({
   container: {
@@ -37,3 +20,23 @@ const styles = StyleSheet.create({
     fontSize: 30,
   },
 });
+
+export default function User({ navigation }) {
+  const openPost = () => navigation.navigate("Post");
+
+  return (
+    <WrapperScreenTabs openPost={openPost}>
+      <LinearGradient
+        colors={[COLORS.SECONDARY, "transparent"]}
+        style={styles.container}
+      >
+       
+        {/* <Avatar.Image size={24} source={require("../../assets/favicon.png")} /> */}
+        <Text style={styles.title}>Username</Text>
+        <Text>@username</Text>
+      </LinearGradient>
+    </WrapperScreenTabs>
+  );
+}
+
+

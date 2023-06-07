@@ -20,6 +20,7 @@ module.exports = {
     "react/require-default-props": "off",
     "react/forbid-prop-types": "off",
     "import/prefer-default-export": "off",
-    "react/react-in-jsx-scope": "off"
+    "react/react-in-jsx-scope": "off",
+    "react/prop-types": "off", // should be exluded
   },
 };
