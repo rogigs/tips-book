@@ -1,12 +1,33 @@
-import { View } from "react-native";
+import { View , StyleSheet } from "react-native";
 import { TextInput, Button } from "react-native-paper";
-import { StyleSheet } from "react-native";
-import { COLORS } from "../../assets/styles/colors";
+
 import { useState } from "react";
 import { signInWithEmailAndPassword } from "firebase/auth";
+import { COLORS } from "../../assets/styles/colors";
 import { auth } from "../../../firebaseConfig";
 
-const Login = ({ navigation }) => {
+const styles = StyleSheet.create({
+  wrapper: {
+    padding: 12,
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: COLORS.PRIMARY,
+    height: "100%",
+    gap: 12,
+    flex: 1,
+  },
+  wrapperIconSend: {
+    display: "flex",
+    flexDirection: "row",
+    width: "100%",
+    justifyContent: "right",
+    backgroundColor: "red",
+  },
+});
+
+function Login({ navigation }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
@@ -18,15 +39,16 @@ const Login = ({ navigation }) => {
       .catch((error) => {
         const errorCode = error.code;
         const errorMessage = error.message;
+        // eslint-disable-next-line no-console
         console.error(errorMessage + errorCode);
       });
 
-  const onChangeEmail = (email) => {
-    setEmail(email);
+  const onChangeEmail = (value) => {
+    setEmail(value);
   };
 
-  const onChangePassword = (password) => {
-    setPassword(password);
+  const onChangePassword = (value) => {
+    setPassword(value);
   };
 
   return (
@@ -59,27 +81,8 @@ const Login = ({ navigation }) => {
       </Button>
     </View>
   );
-};
+}
 
-const styles = StyleSheet.create({
-  wrapper: {
-    padding: 12,
-    display: "flex",
-    flexDirection: "column",
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: COLORS.PRIMARY,
-    height: "100%",
-    gap: 12,
-    flex: 1,
-  },
-  wrapperIconSend: {
-    display: "flex",
-    flexDirection: "row",
-    width: "100%",
-    justifyContent: "right",
-    backgroundColor: "red",
-  },
-});
+
 
 export default Login;

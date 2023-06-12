@@ -1,10 +1,12 @@
 import { Avatar, Button, Card as CardPaper, Text } from "react-native-paper";
 import { COLORS } from "../../assets/styles/colors";
 
-const LeftContent = (props) => <Avatar.Icon {...props} icon="folder" />;
+function LeftContent(props) {
+  return <Avatar.Icon {...props} icon="folder" />
+}
 
-export const Card = () => (
-  <CardPaper style={{ padding: 12 }}>
+export function Card() {
+  return <CardPaper style={{ padding: 12 }}>
     <CardPaper.Title title="Name" subtitle="@username" left={LeftContent} />
     <CardPaper.Content>
       <Text variant="titleLarge">Liga - Jogo</Text>
@@ -20,4 +22,4 @@ export const Card = () => (
       </Button>
     </CardPaper.Actions>
   </CardPaper>
-);
+}

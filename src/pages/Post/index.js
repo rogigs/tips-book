@@ -1,11 +1,27 @@
-import { Text } from "react-native-paper";
-import { View } from "react-native";
-import { TextInput, IconButton } from "react-native-paper";
-import { StyleSheet } from "react-native";
-import { COLORS } from "../../assets/styles/colors";
-import { useState } from "react";
+import { Text , TextInput, IconButton } from "react-native-paper";
+import { View , StyleSheet } from "react-native";
 
-const Post = ({ navigation }) => {
+
+import { useState } from "react";
+import { COLORS } from "../../assets/styles/colors";
+
+const styles = StyleSheet.create({
+  wrapper: {
+    padding: 12,
+  },
+  titleText: {
+    marginBottom: 12,
+    fontSize: 18,
+  },
+  wrapperIconSend: {
+    display: "flex",
+    flexDirection: "row",
+    width: "100%",
+    justifyContent: "right",
+  },
+});
+
+function Post({ navigation }) {
   const [text, setText] = useState("");
 
   const onChangeText = (inputText) => {
@@ -28,22 +44,7 @@ const Post = ({ navigation }) => {
       </View>
     </View>
   );
-};
+}
 
-const styles = StyleSheet.create({
-  wrapper: {
-    padding: 12,
-  },
-  titleText: {
-    marginBottom: 12,
-    fontSize: 18,
-  },
-  wrapperIconSend: {
-    display: "flex",
-    flexDirection: "row",
-    width: "100%",
-    justifyContent: "right",
-  },
-});
 
 export default Post;
