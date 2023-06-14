@@ -1,4 +1,4 @@
-import { View , StyleSheet } from "react-native";
+import { View, StyleSheet } from "react-native";
 import { TextInput, Button } from "react-native-paper";
 
 import { useState } from "react";
@@ -18,6 +18,9 @@ const styles = StyleSheet.create({
     gap: 12,
     flex: 1,
   },
+  textInput: {
+    width: "100%",
+  },
   wrapperIconSend: {
     display: "flex",
     flexDirection: "row",
@@ -31,18 +34,6 @@ function Login({ navigation }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const authenticationUser = () =>
-    signInWithEmailAndPassword(auth, email, password)
-      .then(() => {
-        navigation.push("Tabs");
-      })
-      .catch((error) => {
-        const errorCode = error.code;
-        const errorMessage = error.message;
-        // eslint-disable-next-line no-console
-        console.error(errorMessage + errorCode);
-      });
-
   const onChangeEmail = (value) => {
     setEmail(value);
   };
@@ -51,14 +42,31 @@ function Login({ navigation }) {
     setPassword(value);
   };
 
+  const authenticationUser = () =>
+    signInWithEmailAndPassword(auth, email, password)
+      .then(() => {
+        navigation.push("Tabs");
+      })
+      .catch((error) => {
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        console.error(errorMessage + errorCode);
+      });
+
   return (
     <View style={styles.wrapper}>
-      <TextInput label="Email" value={email} onChangeText={onChangeEmail} />
+      <TextInput
+        label="Email"
+        value={email}
+        onChangeText={onChangeEmail}
+        style={styles.textInput}
+      />
 
       <TextInput
         label="Senha"
         value={password}
         onChangeText={onChangePassword}
+        style={styles.textInput}
       />
 
       <Button
@@ -82,7 +90,5 @@ function Login({ navigation }) {
     </View>
   );
 }
-
-
 
 export default Login;
