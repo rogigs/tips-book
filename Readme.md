@@ -1,5 +1,7 @@
 # Tips book
 
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/ec89fa7cb7794bb9b70d2294b026e600)](https://app.codacy.com/gh/rogigs/tips-book?utm_source=github.com&utm_medium=referral&utm_content=rogigs/tips-book&utm_campaign=Badge_Grade)
+
 A social media for share tips and to compete with friends
 
 ## Authors
