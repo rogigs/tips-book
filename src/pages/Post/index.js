@@ -65,6 +65,7 @@ function Post({ navigation }) {
           comment,
           teamsMatch,
           league: leagueChoose,
+          date: new Date(),
         },
       });
 
@@ -92,7 +93,7 @@ function Post({ navigation }) {
 
       <Text style={styles.titleText}>Adicione um comentário</Text>
       <TextInput value={comment} onChangeText={onChangeComment} />
-
+      {/* //TODO: Add date of tip */}
       <View style={styles.wrapperIconSend}>
         <IconButton
           icon="send"
