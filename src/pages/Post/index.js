@@ -27,11 +27,9 @@ const styles = StyleSheet.create({
 });
 
 function Post({ navigation }) {
-  const [leagueChoose, setLeagueChoose] = useState("");
-
   const [leagues, setLeagues] = useState([]);
+  const [leagueChoose, setLeagueChoose] = useState("");
   const [teamsMatch, setTeamsMatch] = useState("");
-
   const [comment, setComment] = useState("");
 
   const onChangeTeamsMatch = (inputText) => {
@@ -41,22 +39,6 @@ function Post({ navigation }) {
   const onChangeComment = (inputText) => {
     setComment(inputText);
   };
-
-  useEffect(() => {
-    const getLeagues = () => {
-      const starCountRef = ref(database, "leagues/brazil");
-      onValue(starCountRef, (snapshot) => {
-        try {
-          const data = snapshot.val();
-          setLeagues(data);
-        } catch (error) {
-          console.error(error);
-        }
-      });
-    };
-
-    getLeagues();
-  }, []);
 
   const writeUserData = () => {
     try {
@@ -74,6 +56,30 @@ function Post({ navigation }) {
       console.error(error);
     }
   };
+
+  useEffect(() => {
+    const getLeagues = () => {
+      const starCountRef = ref(database, "leagues/brazil");
+      onValue(starCountRef, (snapshot) => {
+        try {
+          const data = snapshot.val();
+          setLeagues(data);
+        } catch (error) {
+          console.error(error);
+        }
+      });
+    };
+
+    getLeagues();
+
+    return () => {
+      // TODO: use useReducer
+      setLeagues("");
+      setLeagueChoose("");
+      setTeamsMatch("");
+      setComment("");
+    };
+  }, []);
 
   return (
     <View style={styles.wrapper}>
