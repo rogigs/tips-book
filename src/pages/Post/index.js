@@ -1,13 +1,18 @@
-import { Text , TextInput, IconButton } from "react-native-paper";
-import { View , StyleSheet } from "react-native";
+import { Text, TextInput, IconButton, Chip } from "react-native-paper";
+import { View, StyleSheet } from "react-native";
+import { ref, onValue, update } from "firebase/database";
+import "react-native-get-random-values";
+import { v4 as uuidv4 } from "uuid";
 
-
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { COLORS } from "../../assets/styles/colors";
+import { database } from "../../../firebaseConfig";
 
 const styles = StyleSheet.create({
   wrapper: {
     padding: 12,
+    display: "flex",
+    gap: 12,
   },
   titleText: {
     marginBottom: 12,
@@ -22,29 +27,89 @@ const styles = StyleSheet.create({
 });
 
 function Post({ navigation }) {
-  const [text, setText] = useState("");
+  const [leagues, setLeagues] = useState([]);
+  const [leagueChoose, setLeagueChoose] = useState("");
+  const [teamsMatch, setTeamsMatch] = useState("");
+  const [comment, setComment] = useState("");
 
-  const onChangeText = (inputText) => {
-    setText(inputText);
+  const onChangeTeamsMatch = (inputText) => {
+    setTeamsMatch(inputText);
   };
+
+  const onChangeComment = (inputText) => {
+    setComment(inputText);
+  };
+
+  const writeUserData = () => {
+    try {
+      update(ref(database, "post/123"), {
+        [uuidv4()]: {
+          comment,
+          teamsMatch,
+          league: leagueChoose,
+          date: new Date(),
+        },
+      });
+
+      navigation.push("Tabs");
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  useEffect(() => {
+    const getLeagues = () => {
+      const starCountRef = ref(database, "leagues/brazil");
+      onValue(starCountRef, (snapshot) => {
+        try {
+          const data = snapshot.val();
+          setLeagues(data);
+        } catch (error) {
+          console.error(error);
+        }
+      });
+    };
+
+    getLeagues();
+
+    return () => {
+      // TODO: use useReducer
+      setLeagues("");
+      setLeagueChoose("");
+      setTeamsMatch("");
+      setComment("");
+    };
+  }, []);
 
   return (
     <View style={styles.wrapper}>
-      <Text style={styles.titleText}>Comente sua aposta</Text>
+      <Text style={styles.titleText}>Selecione a liga</Text>
+      {leagues.map((league) => (
+        <Chip
+          key={league}
+          icon="soccer-field"
+          onPress={() => setLeagueChoose(league)}
+        >
+          {league}
+        </Chip>
+      ))}
 
-      <TextInput value={text} onChangeText={onChangeText} />
+      <Text style={styles.titleText}>Quem irá se enfrentar?</Text>
+      <TextInput value={teamsMatch} onChangeText={onChangeTeamsMatch} />
 
+      <Text style={styles.titleText}>Adicione um comentário</Text>
+      <TextInput value={comment} onChangeText={onChangeComment} />
+      {/* //TODO: Add date of tip */}
       <View style={styles.wrapperIconSend}>
         <IconButton
           icon="send"
           iconColor={COLORS.PRIMARY}
           size={32}
-          onPress={() => navigation.push("Tabs")}
+          onPress={writeUserData}
         />
       </View>
     </View>
   );
 }
-
 
 export default Post;

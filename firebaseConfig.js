@@ -11,6 +11,8 @@ import {
   MESSAGING_SENDER_ID,
 } from "@env";
 
+import { getDatabase } from "firebase/database";
+
 const firebaseConfig = {
   apiKey: API_KEY,
   authDomain: AUTH_DOMAIN,
@@ -23,4 +25,6 @@ const firebaseConfig = {
 };
 
 const app = initializeApp(firebaseConfig);
+
+export const database = getDatabase(app);
 export const auth = getAuth(app);
