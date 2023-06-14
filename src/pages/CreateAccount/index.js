@@ -1,13 +1,14 @@
-import { View , StyleSheet } from "react-native";
+import { View, StyleSheet } from "react-native";
 import { TextInput, Button } from "react-native-paper";
 
 import { useState } from "react";
+import { createUserWithEmailAndPassword } from "firebase/auth";
 import { COLORS } from "../../assets/styles/colors";
-
+import { auth } from "../../../firebaseConfig";
 
 const styles = StyleSheet.create({
   wrapper: {
-    padding: 12,
+    padding: 24,
     display: "flex",
     flexDirection: "column",
     justifyContent: "center",
@@ -16,6 +17,9 @@ const styles = StyleSheet.create({
     height: "100%",
     gap: 12,
     flex: 1,
+  },
+  textInput: {
+    width: "100%",
   },
   wrapperIconSend: {
     display: "flex",
@@ -26,24 +30,56 @@ const styles = StyleSheet.create({
   },
 });
 
-
 function CreateAccount({ navigation }) {
-  const [text, setText] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
-  const onChangeText = (inputText) => {
-    setText(inputText);
+  const onChangeEmail = (inputEmail) => {
+    setEmail(inputEmail);
   };
+
+  const onChangePassword = (inputPassword) => {
+    setPassword(inputPassword);
+  };
+
+  const createUser = () =>
+    createUserWithEmailAndPassword(auth, email, password)
+      .then(() => {
+        navigation.push("Tabs");
+      })
+      .catch((error) => {
+        console.error(error);
+      });
 
   return (
     <View style={styles.wrapper}>
-      <TextInput label="Usuário" value={text} onChangeText={onChangeText} />
+      <TextInput
+        label="Usuário"
+        value={email}
+        onChangeText={onChangeEmail}
+        style={styles.textInput}
+      />
 
-      <TextInput label="Senha" value={text} onChangeText={onChangeText} />
+      <TextInput
+        label="Senha"
+        value={password}
+        onChangeText={onChangePassword}
+        style={styles.textInput}
+      />
+
+      <Button
+        mode="text"
+        size={32}
+        onPress={() => navigation.push("Login")}
+        textColor={COLORS.LIGHT}
+      >
+        Voltar
+      </Button>
 
       <Button
         mode="contained"
         size={32}
-        onPress={() => navigation.push("Tabs")}
+        onPress={createUser}
         buttonColor={COLORS.LIGHT}
         textColor={COLORS.SECONDARY}
       >
