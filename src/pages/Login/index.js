@@ -5,6 +5,8 @@ import { useState } from "react";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { COLORS } from "../../assets/styles/colors";
 import { auth } from "../../../firebaseConfig";
+import { useUser } from "../../context/useUser";
+import { ACTION_TYPES as ACTION_TYPES_USER } from "../../context/useUser/actions";
 
 const styles = StyleSheet.create({
   wrapper: {
@@ -33,6 +35,7 @@ const styles = StyleSheet.create({
 function Login({ navigation }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const { dispatch } = useUser();
 
   const onChangeEmail = (value) => {
     setEmail(value);
@@ -44,7 +47,11 @@ function Login({ navigation }) {
 
   const authenticationUser = () =>
     signInWithEmailAndPassword(auth, email, password)
-      .then(() => {
+      .then((userCredential) => {
+        dispatch({
+          type: ACTION_TYPES_USER.SET_ID_TOKEN,
+          payload: userCredential._tokenResponse.idToken,
+        });
         navigation.push("Tabs");
       })
       .catch((error) => {
