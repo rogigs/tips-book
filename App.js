@@ -1,15 +1,19 @@
-import User from "./src/pages/User";
-import Post from "./src/pages/Post";
-import Login from "./src/pages/Login";
-import { StyleSheet, TouchableOpacity } from "react-native";
+import { StyleSheet, TouchableOpacity, Linking, Platform } from "react-native";
 import { NavigationContainer, DefaultTheme } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createMaterialBottomTabNavigator } from "@react-navigation/material-bottom-tabs";
+import { Button } from "react-native-paper";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useEffect, useState } from "react";
+import User from "./src/pages/User";
+import Post from "./src/pages/Post";
+import Login from "./src/pages/Login";
 import Home from "./src/pages/Home";
 import { COLORS } from "./src/assets/styles/colors";
-import { Button } from "react-native-paper";
 import CreateAccount from "./src/pages/CreateAccount";
+import { UserProvider, useUser } from "./src/context/useUser";
 
+const PERSISTENCE_KEY = "Post";
 const Stack = createNativeStackNavigator();
 const Tab = createMaterialBottomTabNavigator();
 
@@ -21,67 +25,128 @@ const theme = {
   },
 };
 
-const WithTab = () => {
-  return (
-    <Tab.Navigator
-      style={styles.tabNavigator}
-      barStyle={{ backgroundColor: COLORS.PRIMARY, color: COLORS.LIGHT }}
-      inactiveColor={COLORS.SECONDARY}
-      activeColor={COLORS.LIGHT}
-      tabBarActiveBackgroundColor={COLORS.LIGHT}
-      tabBarButton={(props) => <TouchableOpacity {...props} />}
-    >
-      <Tab.Screen
-        name="Home"
-        component={Home}
-        options={{
-          tabBarIcon: ({ color, size }) => (
-            <Button icon="home-account" textColor={color} size={size} />
-          ),
-        }}
-      />
-      <Tab.Screen
-        name="User"
-        component={User}
-        options={{
-          tabBarIcon: ({ color, size }) => (
-            <Button icon="account" textColor={color} size={size} />
-          ),
-        }}
-      />
-    </Tab.Navigator>
-  );
-};
-const App = () => {
-  return (
-    <NavigationContainer theme={theme}>
-      <Stack.Navigator initialRouteName="Login">
-        <Stack.Screen
-          name="Login"
-          component={Login}
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          name="CreateAccount"
-          component={CreateAccount}
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen name="Post" component={Post} />
+const styles = StyleSheet.create({
+  tabNavigator: {
+    backgroundColor: COLORS.SECONDARY,
+  },
+});
 
+function WithTab() {
+  return (
+    <UserProvider>
+      <Tab.Navigator
+        initialRouteName="Home"
+        style={styles.tabNavigator}
+        barStyle={{ backgroundColor: COLORS.PRIMARY, color: COLORS.LIGHT }}
+        inactiveColor={COLORS.SECONDARY}
+        activeColor={COLORS.LIGHT}
+        tabBarActiveBackgroundColor={COLORS.LIGHT}
+        tabBarButton={(props) => <TouchableOpacity {...props} />}
+      >
+        <Tab.Screen
+          name="Home"
+          component={Home}
+          options={{
+            tabBarIcon: ({ color, size }) => (
+              <Button icon="home-account" textColor={color} size={size} />
+            ),
+          }}
+        />
+        <Tab.Screen
+          name="User"
+          component={User}
+          options={{
+            tabBarIcon: ({ color, size }) => (
+              <Button icon="account" textColor={color} size={size} />
+            ),
+          }}
+        />
+      </Tab.Navigator>
+    </UserProvider>
+  );
+}
+
+function Auth() {
+  const { state } = useUser();
+
+  const authenticationUser = state.tokenId;
+
+  if (authenticationUser) {
+    return (
+      <Stack.Navigator>
+        <Stack.Screen name="Post" component={Post} />
         <Stack.Screen
           name="Tabs"
           component={WithTab}
           options={{ headerShown: false }}
         />
       </Stack.Navigator>
-    </NavigationContainer>
-  );
-};
+    );
+  }
 
-const styles = StyleSheet.create({
-  tabNavigator: {
-    backgroundColor: COLORS.SECONDARY,
-  },
-});
+  return (
+    <Stack.Navigator>
+      <Stack.Screen
+        name="Login"
+        component={Login}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="CreateAccount"
+        component={CreateAccount}
+        options={{ headerShown: false }}
+      />
+    </Stack.Navigator>
+  );
+}
+
+function App() {
+  const [isReady, setIsReady] = useState(false);
+  const [initialState, setInitialState] = useState();
+
+  useEffect(() => {
+    const restoreState = async () => {
+      try {
+        const initialUrl = await Linking.getInitialURL();
+
+        if (Platform.OS !== "web" && initialUrl == null) {
+          // Only restore state if there's no deep link and we're not on web
+          const savedStateString = await AsyncStorage.getItem(PERSISTENCE_KEY);
+          const state = savedStateString
+            ? JSON.parse(savedStateString)
+            : undefined;
+
+          if (state !== undefined) {
+            setInitialState(state);
+          }
+        }
+      } finally {
+        setIsReady(true);
+      }
+    };
+
+    if (!isReady) {
+      restoreState();
+    }
+  }, [isReady]);
+
+  if (!isReady) {
+    return null;
+  }
+
+  return (
+    <UserProvider>
+      <NavigationContainer
+        theme={theme}
+        initialState={initialState}
+        onStateChange={(state) =>
+          AsyncStorage.setItem(PERSISTENCE_KEY, JSON.stringify(state))
+        }
+      >
+        <Auth />
+      </NavigationContainer>
+    </UserProvider>
+  );
+}
 
 export default App;
