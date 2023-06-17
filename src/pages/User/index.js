@@ -36,29 +36,32 @@ const styles = StyleSheet.create({
 
 export default function User({ navigation, route }) {
   const [posts, setPosts] = useState({});
-  const [followers, setFollowers] = useState([]);
+  const [following, setFollowing] = useState({});
+  const [followers, setFollowers] = useState({});
 
   const openPost = () => navigation.navigate("Post");
-  const { state } = useUser();
+  const { state, dispatch } = useUser();
 
-  const idProfileVisited = route.params?.isProfilelVisited;
-  const userId = idProfileVisited ?? state.userId;
-  console.log("🚀 ~ file: index.js:47 ~ User ~ userId:", userId);
+  const ownerProfile = route.params?.userIdOfProfileVisited ?? state.userId;
 
   const followUser = () => {
     const postListRef = ref(database, "follows");
     set(postListRef, {
-      [userId]: {
+      [state.userId]: {
         following: {
-          [userId]: true,
+          [ownerProfile]: true,
         },
       },
-      // outro seguidor
+      [ownerProfile]: {
+        follower: {
+          [state.userId]: true,
+        },
+      },
     });
   };
 
   useEffect(() => {
-    const starCountRef = ref(database, `post/${userId}`);
+    const starCountRef = ref(database, `post/${ownerProfile}`);
     onValue(starCountRef, (snapshot) => {
       try {
         const data = snapshot.val();
@@ -70,11 +73,12 @@ export default function User({ navigation, route }) {
   }, []);
 
   useEffect(() => {
-    const starCountRef = ref(database, `follows/${userId}`);
+    const starCountRef = ref(database, `follows/${ownerProfile}`);
     onValue(starCountRef, (snapshot) => {
       try {
         const data = snapshot.val();
-        setFollowers(Object.keys(data.following));
+        setFollowers(Object.keys(data.follower || {}));
+        setFollowing(Object.keys(data.following || {}));
       } catch (error) {
         console.error(error);
       }
@@ -93,7 +97,7 @@ export default function User({ navigation, route }) {
         <View style={styles.containerButtonsToFollow}>
           <Text>Seguidores {followers.length}</Text>
           <Text>| </Text>
-          <Text>Seguindo</Text>
+          <Text>Seguindo {following.length}</Text>
         </View>
         <View style={styles.containerButtonsToFollow}>
           <Button
@@ -105,17 +109,6 @@ export default function User({ navigation, route }) {
           >
             Seguir
           </Button>
-          {!idProfileVisited && (
-            <Button
-              mode="elevated"
-              size={32}
-              onPress={() => {}}
-              buttonColor={COLORS.SECONDARY}
-              textColor={COLORS.LIGHT}
-            >
-              Editar
-            </Button>
-          )}
         </View>
       </LinearGradient>
       <View>
