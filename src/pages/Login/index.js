@@ -50,9 +50,11 @@ function Login({ navigation }) {
       .then((userCredential) => {
         dispatch({
           type: ACTION_TYPES_USER.SET_ID_TOKEN,
-          payload: userCredential._tokenResponse.idToken,
+          payload: {
+            tokenId: userCredential._tokenResponse.idToken,
+            userId: auth.currentUser.uid,
+          },
         });
-        navigation.push("Tabs");
       })
       .catch((error) => {
         const errorCode = error.code;

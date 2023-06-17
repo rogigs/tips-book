@@ -13,7 +13,7 @@ import { COLORS } from "./src/assets/styles/colors";
 import CreateAccount from "./src/pages/CreateAccount";
 import { UserProvider, useUser } from "./src/context/useUser";
 
-const PERSISTENCE_KEY = "Post";
+const PERSISTENCE_KEY = "Login";
 const Stack = createNativeStackNavigator();
 const Tab = createMaterialBottomTabNavigator();
 
@@ -71,31 +71,31 @@ function Auth() {
 
   const authenticationUser = state.tokenId;
 
-  if (authenticationUser) {
-    return (
-      <Stack.Navigator>
-        <Stack.Screen name="Post" component={Post} />
-        <Stack.Screen
-          name="Tabs"
-          component={WithTab}
-          options={{ headerShown: false }}
-        />
-      </Stack.Navigator>
-    );
-  }
-
   return (
     <Stack.Navigator>
-      <Stack.Screen
-        name="Login"
-        component={Login}
-        options={{ headerShown: false }}
-      />
-      <Stack.Screen
-        name="CreateAccount"
-        component={CreateAccount}
-        options={{ headerShown: false }}
-      />
+      {authenticationUser ? (
+        <>
+          <Stack.Screen
+            name="Tabs"
+            component={WithTab}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen name="Post" component={Post} />
+        </>
+      ) : (
+        <>
+          <Stack.Screen
+            name="Login"
+            component={Login}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="CreateAccount"
+            component={CreateAccount}
+            options={{ headerShown: false }}
+          />
+        </>
+      )}
     </Stack.Navigator>
   );
 }
