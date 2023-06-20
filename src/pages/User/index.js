@@ -96,7 +96,18 @@ export default function User({ navigation, route }) {
     onValue(starCountRef, (snapshot) => {
       try {
         const data = snapshot.val();
-        setPosts(data);
+
+        if (data) {
+          const transformResponse = Object.entries(data).map(
+            ([key, value]) => ({
+              user: key,
+              postId: Object.keys(value)[0],
+              post: Object.values(value)[0],
+            })
+          );
+
+          setPosts(transformResponse);
+        }
       } catch (error) {
         console.error(error);
       }
@@ -153,9 +164,10 @@ export default function User({ navigation, route }) {
           </Button>
         </View>
       </LinearGradient>
-      <View>
-        <Card actions={false} {...posts} />
-      </View>
+
+      {posts.map((post) => (
+        <Card key={post.postId} {...post} />
+      ))}
     </WrapperScreenTabs>
   );
 }
