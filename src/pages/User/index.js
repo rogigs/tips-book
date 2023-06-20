@@ -36,6 +36,7 @@ const styles = StyleSheet.create({
 });
 
 export default function User({ navigation, route }) {
+  const [user, setUser] = useState({});
   const [posts, setPosts] = useState([]);
   const [following, setFollowing] = useState([]);
   const [followers, setFollowers] = useState([]);
@@ -73,8 +74,22 @@ export default function User({ navigation, route }) {
   const buttonProperties = buttonPropertiesFn({
     visitor: userIdOfProfileVisited,
     follower: isAFollower,
-    onPress: () => followUser(),
+    onPress: userIdOfProfileVisited
+      ? () => followUser()
+      : () => navigation.navigate("EditAccount", { ...user }),
   });
+
+  useEffect(() => {
+    const starCountRef = ref(database, `user/${ownerProfile}`);
+    onValue(starCountRef, (snapshot) => {
+      try {
+        const data = snapshot.val();
+        setUser(data);
+      } catch (error) {
+        console.error(error);
+      }
+    });
+  }, []);
 
   useEffect(() => {
     const starCountRef = ref(database, `post/${ownerProfile}`);
@@ -118,8 +133,8 @@ export default function User({ navigation, route }) {
         style={styles.container}
       >
         <Avatar.Image size={24} source={require("../../assets/favicon.png")} />
-        <Text style={styles.title}>Username</Text>
-        <Text>@username</Text>
+        <Text style={styles.title}>{user?.name}</Text>
+        <Text>@{user?.username}</Text>
         <View style={styles.containerButtonsToFollow}>
           <Text>Seguidores {followers.length}</Text>
           <Text>| </Text>

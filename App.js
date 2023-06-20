@@ -12,6 +12,7 @@ import Home from "./src/pages/Home";
 import { COLORS } from "./src/assets/styles/colors";
 import CreateAccount from "./src/pages/CreateAccount";
 import { UserProvider, useUser } from "./src/context/useUser";
+import EditAccount from "./src/pages/EditAccount";
 
 const PERSISTENCE_KEY = "Login";
 const Stack = createNativeStackNavigator();
@@ -47,6 +48,24 @@ function HomeScreen() {
     </Stack.Navigator>
   );
 }
+
+function PostScreen() {
+  return (
+    <Stack.Navigator initialRouteName="Account">
+      <Stack.Screen
+        name="Account"
+        component={User}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="EditAccount"
+        component={EditAccount}
+        options={{ title: "Editar" }}
+      />
+    </Stack.Navigator>
+  );
+}
+
 function WithTab() {
   return (
     <Tab.Navigator
@@ -69,7 +88,7 @@ function WithTab() {
       />
       <Tab.Screen
         name="User"
-        component={User}
+        component={PostScreen}
         options={{
           tabBarIcon: ({ color, size }) => (
             <Button icon="account" textColor={color} size={size} />
