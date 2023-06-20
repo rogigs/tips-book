@@ -6,6 +6,7 @@ import { WrapperScreenTabs } from "../../components/WrapperScreenTabs";
 import { useUser } from "../../context/useUser";
 import { COLORS } from "../../assets/styles/colors";
 import { database } from "../../../firebaseConfig";
+import { ACTION_TYPES as ACTION_TYPES_USER } from "../../context/useUser/actions";
 
 const styles = StyleSheet.create({
   wrapper: {
@@ -16,10 +17,11 @@ const styles = StyleSheet.create({
 });
 
 export default function EditAccount({ navigation, route }) {
-  const [name, setName] = useState(route.params.name);
-  const [username, setUsername] = useState(route.params.username);
+  const [name, setName] = useState(route.params?.name);
+  const [username, setUsername] = useState(route.params?.username);
   const {
     state: { userId },
+    dispatch,
   } = useUser();
 
   const openPost = () => navigation.navigate("Post");
@@ -34,14 +36,25 @@ export default function EditAccount({ navigation, route }) {
 
   const changeEditAccount = () => {
     try {
-      const userRef = ref(database, `user/${userId}`);
-
+      const userRef = ref(database, "user");
       set(userRef, {
-        name,
-        username,
+        [userId ?? route.params.userId]: {
+          name,
+          username,
+        },
       });
 
-      navigation.goBack();
+      if (userId) {
+        navigation.goBack();
+      } else {
+        dispatch({
+          type: ACTION_TYPES_USER.SET_ID_TOKEN,
+          payload: {
+            tokenId: route.params.tokenId,
+            userId: route.params.userId,
+          },
+        });
+      }
     } catch (error) {
       console.error(error);
     }

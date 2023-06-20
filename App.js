@@ -127,6 +127,11 @@ function Auth() {
             component={CreateAccount}
             options={{ headerShown: false }}
           />
+          <Stack.Screen
+            name="EditAccount"
+            component={EditAccount}
+            options={{ headerShown: false }}
+          />
         </>
       )}
     </Stack.Navigator>

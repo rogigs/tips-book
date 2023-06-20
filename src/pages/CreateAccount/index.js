@@ -44,8 +44,11 @@ function CreateAccount({ navigation }) {
 
   const createUser = () =>
     createUserWithEmailAndPassword(auth, email, password)
-      .then(() => {
-        navigation.push("Tabs");
+      .then((userCredential) => {
+        navigation.navigate("EditAccount", {
+          tokenId: userCredential._tokenResponse.idToken,
+          userId: auth.currentUser.uid,
+        });
       })
       .catch((error) => {
         console.error(error);
