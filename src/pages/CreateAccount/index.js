@@ -1,4 +1,4 @@
-import { View, StyleSheet } from "react-native";
+import { View, StyleSheet, Image } from "react-native";
 import { TextInput, Button } from "react-native-paper";
 
 import { useState } from "react";
@@ -56,6 +56,12 @@ function CreateAccount({ navigation }) {
 
   return (
     <View style={styles.wrapper}>
+      <Image
+        resizeMode="contain"
+        source={require("../../assets/images/iconTipsBook.png")}
+        style={{ width: 200, height: 200 }}
+      />
+
       <TextInput
         label="Usuário"
         value={email}
