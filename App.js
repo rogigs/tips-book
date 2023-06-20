@@ -13,7 +13,7 @@ import { COLORS } from "./src/assets/styles/colors";
 import CreateAccount from "./src/pages/CreateAccount";
 import { UserProvider, useUser } from "./src/context/useUser";
 
-const PERSISTENCE_KEY = "Post";
+const PERSISTENCE_KEY = "Login";
 const Stack = createNativeStackNavigator();
 const Tab = createMaterialBottomTabNavigator();
 
@@ -31,38 +31,52 @@ const styles = StyleSheet.create({
   },
 });
 
+function HomeScreen() {
+  return (
+    <Stack.Navigator initialRouteName="Feed">
+      <Stack.Screen
+        name="Feed"
+        component={Home}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="UserVisited"
+        component={User}
+        options={{ title: "" }}
+      />
+    </Stack.Navigator>
+  );
+}
 function WithTab() {
   return (
-    <UserProvider>
-      <Tab.Navigator
-        initialRouteName="Home"
-        style={styles.tabNavigator}
-        barStyle={{ backgroundColor: COLORS.PRIMARY, color: COLORS.LIGHT }}
-        inactiveColor={COLORS.SECONDARY}
-        activeColor={COLORS.LIGHT}
-        tabBarActiveBackgroundColor={COLORS.LIGHT}
-        tabBarButton={(props) => <TouchableOpacity {...props} />}
-      >
-        <Tab.Screen
-          name="Home"
-          component={Home}
-          options={{
-            tabBarIcon: ({ color, size }) => (
-              <Button icon="home-account" textColor={color} size={size} />
-            ),
-          }}
-        />
-        <Tab.Screen
-          name="User"
-          component={User}
-          options={{
-            tabBarIcon: ({ color, size }) => (
-              <Button icon="account" textColor={color} size={size} />
-            ),
-          }}
-        />
-      </Tab.Navigator>
-    </UserProvider>
+    <Tab.Navigator
+      initialRouteName="Home"
+      style={styles.tabNavigator}
+      barStyle={{ backgroundColor: COLORS.PRIMARY, color: COLORS.LIGHT }}
+      inactiveColor={COLORS.SECONDARY}
+      activeColor={COLORS.LIGHT}
+      tabBarActiveBackgroundColor={COLORS.LIGHT}
+      tabBarButton={(props) => <TouchableOpacity {...props} />}
+    >
+      <Tab.Screen
+        name="Home"
+        component={HomeScreen}
+        options={{
+          tabBarIcon: ({ color, size }) => (
+            <Button icon="home-account" textColor={color} size={size} />
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="User"
+        component={User}
+        options={{
+          tabBarIcon: ({ color, size }) => (
+            <Button icon="account" textColor={color} size={size} />
+          ),
+        }}
+      />
+    </Tab.Navigator>
   );
 }
 
@@ -71,31 +85,31 @@ function Auth() {
 
   const authenticationUser = state.tokenId;
 
-  if (authenticationUser) {
-    return (
-      <Stack.Navigator>
-        <Stack.Screen name="Post" component={Post} />
-        <Stack.Screen
-          name="Tabs"
-          component={WithTab}
-          options={{ headerShown: false }}
-        />
-      </Stack.Navigator>
-    );
-  }
-
   return (
     <Stack.Navigator>
-      <Stack.Screen
-        name="Login"
-        component={Login}
-        options={{ headerShown: false }}
-      />
-      <Stack.Screen
-        name="CreateAccount"
-        component={CreateAccount}
-        options={{ headerShown: false }}
-      />
+      {authenticationUser ? (
+        <>
+          <Stack.Screen
+            name="Tabs"
+            component={WithTab}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen name="Post" component={Post} options={{ title: "" }} />
+        </>
+      ) : (
+        <>
+          <Stack.Screen
+            name="Login"
+            component={Login}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="CreateAccount"
+            component={CreateAccount}
+            options={{ headerShown: false }}
+          />
+        </>
+      )}
     </Stack.Navigator>
   );
 }

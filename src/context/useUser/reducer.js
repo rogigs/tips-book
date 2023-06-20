@@ -4,7 +4,7 @@ export const reducer = (state, action) => {
   const actionTypes = {
     [ACTION_TYPES.SET_ID_TOKEN]: (prevState) => ({
       ...prevState,
-      tokenId: action.payload,
+      ...action.payload,
     }),
   };
 

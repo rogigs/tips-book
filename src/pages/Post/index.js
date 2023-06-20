@@ -7,6 +7,7 @@ import { v4 as uuidv4 } from "uuid";
 import { useEffect, useState } from "react";
 import { COLORS } from "../../assets/styles/colors";
 import { database } from "../../../firebaseConfig";
+import { useUser } from "../../context/useUser";
 
 const styles = StyleSheet.create({
   wrapper: {
@@ -31,6 +32,9 @@ function Post({ navigation }) {
   const [leagueChoose, setLeagueChoose] = useState("");
   const [teamsMatch, setTeamsMatch] = useState("");
   const [comment, setComment] = useState("");
+  const {
+    state: { userId },
+  } = useUser();
 
   const onChangeTeamsMatch = (inputText) => {
     setTeamsMatch(inputText);
@@ -42,7 +46,7 @@ function Post({ navigation }) {
 
   const writeUserData = () => {
     try {
-      update(ref(database, "post/123"), {
+      update(ref(database, `post/${userId}`), {
         [uuidv4()]: {
           comment,
           teamsMatch,
