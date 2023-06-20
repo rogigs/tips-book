@@ -66,20 +66,6 @@ export default function Home({ navigation }) {
         {posts.map((post) => (
           <Card key={post.postId} {...post} />
         ))}
-
-        <Button
-          mode="elevated"
-          size={32}
-          onPress={() => {
-            navigation.navigate("UserVisited", {
-              userIdOfProfileVisited: "5xb9tD29ieffXDagAKHmteS1pQ23",
-            });
-          }}
-          buttonColor={COLORS.SECONDARY}
-          textColor={COLORS.LIGHT}
-        >
-          Testar Perfil
-        </Button>
       </View>
     </WrapperScreenTabs>
   );
