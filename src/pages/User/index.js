@@ -8,6 +8,7 @@ import { COLORS } from "../../assets/styles/colors";
 import { Card } from "../../components/Card";
 import { database } from "../../../firebaseConfig";
 import { useUser } from "../../context/useUser";
+import { buttonProperties as buttonPropertiesFn } from "./utils";
 
 const styles = StyleSheet.create({
   container: {
@@ -35,9 +36,9 @@ const styles = StyleSheet.create({
 });
 
 export default function User({ navigation, route }) {
-  const [posts, setPosts] = useState({});
-  const [following, setFollowing] = useState({});
-  const [followers, setFollowers] = useState({});
+  const [posts, setPosts] = useState([]);
+  const [following, setFollowing] = useState([]);
+  const [followers, setFollowers] = useState([]);
   const [isAFollower, setIsAFollower] = useState(false);
 
   const openPost = () => navigation.navigate("Post");
@@ -46,43 +47,34 @@ export default function User({ navigation, route }) {
   const userIdOfProfileVisited = route.params?.userIdOfProfileVisited;
   const ownerProfile = userIdOfProfileVisited ?? state.userId;
 
-  const followUser = ({ followUser }) => {
-    const postListRef = ref(database, "follows");
-    set(postListRef, {
-      [state.userId]: {
-        following: {
-          [ownerProfile]: followUser,
-        },
-      },
-      [ownerProfile]: {
-        follower: {
-          [state.userId]: followUser,
-        },
-      },
-    });
+  const followUser = () => {
+    try {
+      const postListRef = ref(database, "follows");
 
-    setIsAFollower(followUser);
+      set(postListRef, {
+        [state.userId]: {
+          following: {
+            [ownerProfile]: !isAFollower,
+          },
+        },
+        [ownerProfile]: {
+          follower: {
+            [state.userId]: !isAFollower,
+          },
+        },
+      });
+
+      setIsAFollower(!isAFollower);
+    } catch (error) {
+      console.error(error);
+    }
   };
 
-  const buttonProperties = userIdOfProfileVisited
-    ? {
-        name: isAFollower ? "Deixar de seguir" : "Seguir",
-        screenToGo: "",
-        icon: isAFollower ? "account-minus" : "account-plus",
-        color: isAFollower ? COLORS.LIGHT : COLORS.SECONDARY,
-        textColor: isAFollower ? COLORS.SECONDARY : COLORS.LIGHT,
-        onPress: isAFollower
-          ? () => followUser({ followUser: false })
-          : () => followUser({ followUser: true }),
-      }
-    : {
-        name: "Editar",
-        screenToGo: "Edit",
-        icon: "tools",
-        color: COLORS.SECONDARY,
-        textColor: COLORS.LIGHT,
-        onPress: () => {},
-      };
+  const buttonProperties = buttonPropertiesFn({
+    visitor: userIdOfProfileVisited,
+    follower: isAFollower,
+    onPress: () => followUser(),
+  });
 
   useEffect(() => {
     const starCountRef = ref(database, `post/${ownerProfile}`);
@@ -98,18 +90,21 @@ export default function User({ navigation, route }) {
 
   useEffect(() => {
     const starCountRef = ref(database, `follows/${ownerProfile}`);
-
     onValue(starCountRef, (snapshot) => {
       try {
         const data = snapshot.val();
+        if (data?.follower) {
+          setFollowers(Object.keys(data?.follower));
+          setIsAFollower(
+            Object.entries(data?.follower).some(
+              (follower) => follower[0] === state.userId && follower[1] === true
+            )
+          );
+        }
 
-        setFollowers(Object.keys(data?.follower || {}));
-        setFollowing(Object.keys(data?.following || {}));
-        setIsAFollower(
-          Object.entries(data.follower).some(
-            (follower) => follower[0] === state.userId && follower[1] === true
-          )
-        );
+        if (data?.following) {
+          setFollowing(Object.keys(data?.following));
+        }
       } catch (error) {
         console.error(error);
       }
