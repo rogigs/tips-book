@@ -14,7 +14,7 @@ export const buttonProperties = ({ visitor, follower, onPress }) => {
       icon: "tools",
       color: COLORS.SECONDARY,
       textColor: COLORS.LIGHT,
-      onPress: () => {},
+      onPress,
     },
     [STATUS_PROFILE.VISITOR_FOLLOWER]: {
       name: "Deixar de seguir",

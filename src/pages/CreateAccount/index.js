@@ -1,4 +1,4 @@
-import { View, StyleSheet } from "react-native";
+import { View, StyleSheet, Image } from "react-native";
 import { TextInput, Button } from "react-native-paper";
 
 import { useState } from "react";
@@ -44,8 +44,11 @@ function CreateAccount({ navigation }) {
 
   const createUser = () =>
     createUserWithEmailAndPassword(auth, email, password)
-      .then(() => {
-        navigation.push("Tabs");
+      .then((userCredential) => {
+        navigation.navigate("EditAccount", {
+          tokenId: userCredential._tokenResponse.idToken,
+          userId: auth.currentUser.uid,
+        });
       })
       .catch((error) => {
         console.error(error);
@@ -53,6 +56,12 @@ function CreateAccount({ navigation }) {
 
   return (
     <View style={styles.wrapper}>
+      <Image
+        resizeMode="contain"
+        source={require("../../assets/images/iconTipsBook.png")}
+        style={{ width: 200, height: 200 }}
+      />
+
       <TextInput
         label="Usuário"
         value={email}

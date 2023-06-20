@@ -1,6 +1,31 @@
 # Tips book
 
-A social media for share tips and to compete with friends
+A social media for share tips and to compete with friends. Furthermore, you can track your profits 😄🍀
+
+[![Codacy Badge](https://app.codacy.com/project/badge/Grade/358e16c46b2e4ab4aa946d2e7d624932)](https://app.codacy.com/gh/rogigs/tips-book/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade)
+
+| ![Preview Login screen](./src/assets/images/preview_login_screen.jpg) | ![Preview Login screen](./src/assets/images/preview_profile_feed.jpg) | ![Preview Login screen](./src/assets/images/preview_profile_screen.jpg) |
+| --------------------------------------------------------------------- | --------------------------------------------------------------------- | ----------------------------------------------------------------------- |
+
+## Roadmap
+
+- Add main components
+
+- Add a server to project
+
+- UX/UI (In Progress...🚧)
+
+  - Main components
+  - Error handling
+  - Form validation
+
+- MVP
+  - Login
+  - Create account
+  - Edit account
+  - Feed
+  - Follow user
+  - Profile
 
 ## Authors
 
@@ -62,16 +87,3 @@ Start project
   npm run ios // device ios
   npm run web // web
 ```
-
-## Roadmap
-
-- Add main components
-
-- Add a server to project
-
-- Visual identity (In Progress...🚧)
-
-- MVP
-  - Login/Create account
-  - Feed
-  - Following
