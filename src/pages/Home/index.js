@@ -30,13 +30,17 @@ export default function Home({ navigation }) {
       try {
         const data = snapshot.val();
 
-        const transformResponse = Object.entries(data).map(([key, value]) => ({
-          user: key,
-          postId: Object.keys(value)[0],
-          post: Object.values(value)[0],
-        }));
+        if (data) {
+          const transformResponse = Object.entries(data).map(
+            ([key, value]) => ({
+              user: key,
+              postId: Object.keys(value)[0],
+              post: Object.values(value)[0],
+            })
+          );
 
-        setPosts(transformResponse);
+          setPosts(transformResponse);
+        }
       } catch (error) {
         console.error(error);
       }
