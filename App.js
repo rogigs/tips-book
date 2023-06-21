@@ -1,11 +1,12 @@
-import {  Linking, Platform } from "react-native";
+import { Linking, Platform } from "react-native";
 import { NavigationContainer, DefaultTheme } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useEffect, useState } from "react";
 
-import { Text } from "react-native-paper";
 import { UserProvider } from "./src/context/useUser";
 import { Auth as AuthMobile } from "./src/pages/Auth/mobile";
+import { Auth as AuthWeb } from "./src/pages/Auth/web";
+
 
 const PERSISTENCE_KEY = "Login";
 
@@ -53,18 +54,17 @@ function App() {
     return null;
   }
 
-
   return (
     <UserProvider>
-      <NavigationContainer
-        theme={theme}
-        initialState={initialState}
-        onStateChange={(state) =>
-          AsyncStorage.setItem(PERSISTENCE_KEY, JSON.stringify(state))
-        }
-      >
-        {isWeb ? <Text>TESTE</Text>: <AuthMobile />} 
-      </NavigationContainer>
+      {isWeb ? <AuthWeb /> :
+        <NavigationContainer
+          theme={theme}
+          initialState={initialState}
+          onStateChange={(state) => AsyncStorage.setItem(PERSISTENCE_KEY, JSON.stringify(state))}
+        >
+          <AuthMobile />
+        </NavigationContainer>
+      }
     </UserProvider>
   );
 }
