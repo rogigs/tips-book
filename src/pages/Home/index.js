@@ -1,10 +1,9 @@
-import { View, StyleSheet } from "react-native";
-import { Button } from "react-native-paper";
+import { View, StyleSheet, ScrollView } from "react-native";
+import { ActivityIndicator } from "react-native-paper";
 import { useEffect, useState } from "react";
 import { onValue, ref } from "firebase/database";
 import { Card } from "../../components/Card";
 import { WrapperScreenTabs } from "../../components/WrapperScreenTabs";
-import { COLORS } from "../../assets/styles/colors";
 import { database } from "../../../firebaseConfig";
 import { useUser } from "../../context/useUser";
 import { isFollower } from "../../utils/follow";
@@ -12,11 +11,14 @@ import { isFollower } from "../../utils/follow";
 const styles = StyleSheet.create({
   wrapper: {
     padding: 12,
+    flex: 1,
+    gap: 24,
   },
 });
 
 export default function Home({ navigation }) {
   const [posts, setPosts] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   const [following, setFollowing] = useState();
   const { state } = useUser();
@@ -33,9 +35,11 @@ export default function Home({ navigation }) {
         if (data) {
           const transformResponse = Object.entries(data).map(
             ([key, value]) => ({
-              user: key,
-              postId: Object.keys(value)[0],
-              post: Object.values(value)[0],
+              followingId: key,
+              post: Object.entries(value).map(([key, value]) => ({
+                postId: key,
+                ...value,
+              })),
             })
           );
 
@@ -43,6 +47,8 @@ export default function Home({ navigation }) {
         }
       } catch (error) {
         console.error(error);
+      } finally {
+        setLoading(false);
       }
     });
   }, [following]);
@@ -60,13 +66,27 @@ export default function Home({ navigation }) {
     });
   }, []);
 
+  if (loading) {
+    return <ActivityIndicator />;
+  }
+
   return (
     <WrapperScreenTabs openPost={openPost}>
-      <View style={styles.wrapper}>
-        {posts.map((post) => (
-          <Card key={post.postId} {...post} />
-        ))}
-      </View>
+      <ScrollView scrollEnabled={true} nestedScrollEnabled={true}>
+        <View style={styles.wrapper}>
+          {posts.map((following) =>
+            following.post.map((post) => {
+              return (
+                <Card
+                  key={post.postId}
+                  user={following.followingId}
+                  {...post}
+                />
+              );
+            })
+          )}
+        </View>
+      </ScrollView>
     </WrapperScreenTabs>
   );
 }

@@ -4,10 +4,10 @@ function LeftContent(props) {
   return <Avatar.Icon {...props} icon="folder" />;
 }
 
-export function Card({ user, post: { comment, league, teamsMatch } }) {
+export function Card({ user, comment, league, teamsMatch, date }) {
   return (
     <CardPaper style={{ padding: 12 }}>
-      <CardPaper.Title title={user} subtitle={user} left={LeftContent} />
+      <CardPaper.Title title={user} subtitle={date} left={LeftContent} />
       <CardPaper.Content>
         <Text variant="titleLarge">
           {league} - {teamsMatch}
