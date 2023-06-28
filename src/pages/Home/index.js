@@ -72,18 +72,12 @@ export default function Home({ navigation }) {
 
   return (
     <WrapperScreenTabs openPost={openPost}>
-      <ScrollView scrollEnabled={true} nestedScrollEnabled={true}>
+      <ScrollView scrollEnabled nestedScrollEnabled>
         <View style={styles.wrapper}>
           {posts.map((following) =>
-            following.post.map((post) => {
-              return (
-                <Card
-                  key={post.postId}
-                  user={following.followingId}
-                  {...post}
-                />
-              );
-            })
+            following.post.map((post) => (
+              <Card key={post.postId} user={following.followingId} {...post} />
+            ))
           )}
         </View>
       </ScrollView>
