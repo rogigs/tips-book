@@ -12,6 +12,9 @@ import "react-native-get-random-values";
 import { v4 as uuidv4 } from "uuid";
 import { useForm, Controller } from "react-hook-form";
 import { useEffect, useState } from "react";
+import DateTimePicker from "@react-native-community/datetimepicker";
+import { isAfter, startOfToday } from "date-fns";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { COLORS } from "../../assets/styles/colors";
 import { database } from "../../../firebaseConfig";
 import { useUser } from "../../context/useUser";
@@ -30,7 +33,7 @@ const styles = StyleSheet.create({
     display: "flex",
     flexDirection: "row",
     width: "100%",
-    justifyContent: "right",
+    justifyContent: "flex-end",
   },
   wrapperRadio: {
     display: "flex",
@@ -87,18 +90,53 @@ function Post({ navigation }) {
     getLeagues();
   }, []);
 
-  const onSubmit = (data) => {
+  const onSubmit = async (data) => {
+    const user = await AsyncStorage.getItem("user");
+
+    const updateStorage = onValue(
+      ref(database, `user/${userId}`),
+      async (snapshot) => {
+        try {
+          const { name, username } = snapshot.val();
+
+          await AsyncStorage.setItem(
+            "user",
+            JSON.stringify({ name, username })
+          );
+
+          return { name, username };
+        } catch (error) {
+          console.error(error);
+
+          return { name: "ERROR", username: "ERROR" };
+        }
+      }
+    );
+
+    const objPost = {
+      [uuidv4()]: {
+        postDate: new Date(),
+        user: user ? JSON.parse(user) : updateStorage(),
+        ...data,
+      },
+    };
+
     try {
-      update(ref(database, `post/${userId}`), {
-        [uuidv4()]: {
-          date: new Date(),
-          ...data,
-        },
-      });
-      navigation.push("Tabs");
+      update(ref(database, `post/${userId}`), objPost);
     } catch (error) {
       console.error(error);
     }
+
+    // TODO: Create a script to delete feed
+    if (isAfter(data.dateMatch, startOfToday())) {
+      try {
+        update(ref(database, `feed/${userId}`), objPost);
+      } catch (error) {
+        console.error(error);
+      }
+    }
+
+    navigation.push("Tabs");
   };
 
   return (
@@ -159,6 +197,25 @@ function Post({ navigation }) {
           </RadioButton.Group>
         )}
         name="result"
+        rules={{ required: true }}
+      />
+      <Text style={styles.titleText}>Data da partida ?</Text>
+      <Controller
+        control={control}
+        render={({ field: { onChange, value } }) => (
+          <View style={styles.wrapperRadio}>
+            <DateTimePicker
+              testID="dateTimePicker"
+              value={value || new Date(1598051730000)}
+              mode="date"
+              is24Hour
+              onChange={(newValue) =>
+                onChange(new Date(newValue?.nativeEvent?.timestamp))
+              }
+            />
+          </View>
+        )}
+        name="dateMatch"
         rules={{ required: true }}
       />
 
