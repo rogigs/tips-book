@@ -2,6 +2,7 @@ import { View, StyleSheet } from "react-native";
 import { IconButton, Text, TextInput } from "react-native-paper";
 import { useState } from "react";
 import { ref, set } from "firebase/database";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { WrapperScreenTabs } from "../../components/WrapperScreenTabs";
 import { useUser } from "../../context/useUser";
 import { COLORS } from "../../assets/styles/colors";
@@ -34,7 +35,7 @@ export default function EditAccount({ navigation, route }) {
     setUsername(inputText);
   };
 
-  const changeEditAccount = () => {
+  const changeEditAccount = async () => {
     try {
       const userRef = ref(database, "user");
       set(userRef, {
@@ -47,6 +48,8 @@ export default function EditAccount({ navigation, route }) {
       if (userId) {
         navigation.goBack();
       } else {
+        await AsyncStorage.setItem("user", JSON.stringify({ name, username }));
+
         dispatch({
           type: ACTION_TYPES_USER.SET_ID_TOKEN,
           payload: {
