@@ -1,13 +1,37 @@
 import { Avatar, Card as CardPaper, Text } from "react-native-paper";
+import { format, parseISO } from "date-fns";
+import { COLORS } from "../../assets/styles/colors";
 
 function LeftContent(props) {
-  return <Avatar.Icon {...props} icon="folder" />;
+  return (
+    <Avatar.Icon
+      color={COLORS.LIGHT}
+      icon="account"
+      style={{ backgroundColor: COLORS.SECONDARY }}
+      {...props}
+    />
+  );
 }
 
-export function Card({ user, comment, league, teamsMatch, date }) {
+function RightContent({ date }) {
+  return <Text>Compartilhado em: {format(parseISO(date), "dd/MM/yy")}</Text>;
+}
+
+export function Card({
+  user: { name, username },
+  comment,
+  league,
+  teamsMatch,
+  postDate,
+}) {
   return (
     <CardPaper style={{ padding: 12 }}>
-      <CardPaper.Title title={user} subtitle={date} left={LeftContent} />
+      <CardPaper.Title
+        title={name}
+        subtitle={username}
+        left={LeftContent}
+        right={() => <RightContent date={postDate} />}
+      />
       <CardPaper.Content>
         <Text variant="titleLarge">
           {league} - {teamsMatch}
