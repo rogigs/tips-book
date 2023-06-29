@@ -6,18 +6,18 @@ import {
   RadioButton,
   ActivityIndicator,
 } from "react-native-paper";
-import { View, StyleSheet } from "react-native";
+import { View, StyleSheet, Platform } from "react-native";
 import { ref, onValue, update } from "firebase/database";
 import "react-native-get-random-values";
 import { v4 as uuidv4 } from "uuid";
 import { useForm, Controller } from "react-hook-form";
 import { useEffect, useState } from "react";
-import DateTimePicker from "@react-native-community/datetimepicker";
-import { isAfter, startOfToday } from "date-fns";
+import { isAfter, startOfDay, isToday, parseISO } from "date-fns";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { COLORS } from "../../assets/styles/colors";
 import { database } from "../../../firebaseConfig";
 import { useUser } from "../../context/useUser";
+import { DatePickerMy } from "../../components/DatePicker";
 
 const styles = StyleSheet.create({
   wrapper: {
@@ -127,16 +127,18 @@ function Post({ navigation }) {
       console.error(error);
     }
 
+    const date =
+      Platform.OS === "web" ? parseISO(data.dateMatch) : data.dateMatch;
+
+    const today = new Date();
     // TODO: Create a script to delete feed
-    if (isAfter(data.dateMatch, startOfToday())) {
+    if (isToday(date) || isAfter(date, today)) {
       try {
         update(ref(database, `feed/${userId}`), objPost);
       } catch (error) {
         console.error(error);
       }
     }
-
-    navigation.push("Tabs");
   };
 
   return (
@@ -204,19 +206,10 @@ function Post({ navigation }) {
         control={control}
         render={({ field: { onChange, value } }) => (
           <View style={styles.wrapperRadio}>
-            <DateTimePicker
-              testID="dateTimePicker"
-              value={value || new Date(1598051730000)}
-              mode="date"
-              is24Hour
-              onChange={(newValue) =>
-                onChange(new Date(newValue?.nativeEvent?.timestamp))
-              }
-            />
+            <DatePickerMy value={value} onChange={onChange} />
           </View>
         )}
         name="dateMatch"
-        rules={{ required: true }}
       />
 
       <View style={styles.wrapperIconSend}>

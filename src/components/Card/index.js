@@ -1,5 +1,5 @@
 import { Avatar, Card as CardPaper, Text } from "react-native-paper";
-import { format, parseISO } from "date-fns";
+import { format } from "date-fns";
 import { COLORS } from "../../assets/styles/colors";
 
 function LeftContent(props) {
@@ -14,7 +14,7 @@ function LeftContent(props) {
 }
 
 function RightContent({ date }) {
-  return <Text>Compartilhado em: {format(parseISO(date), "dd/MM/yy")}</Text>;
+  return <Text>Compartilhado em: {format(new Date(date), "dd/MM/yy")}</Text>;
 }
 
 export function Card({
