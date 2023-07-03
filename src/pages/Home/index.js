@@ -57,9 +57,7 @@ export default function Home({ navigation }) {
       <ScrollView scrollEnabled nestedScrollEnabled>
         <View style={styles.wrapper}>
           {posts.map((following) =>
-            following.post.map((post) => (
-              <Card key={post.postId} user={following.followingId} {...post} />
-            ))
+            following.post.map((post) => <Card key={post.postId} {...post} />)
           )}
         </View>
       </ScrollView>
