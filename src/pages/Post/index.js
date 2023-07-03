@@ -12,7 +12,7 @@ import "react-native-get-random-values";
 import { v4 as uuidv4 } from "uuid";
 import { useForm, Controller } from "react-hook-form";
 import { useEffect, useState } from "react";
-import { isAfter, startOfDay, isToday, parseISO } from "date-fns";
+import { isAfter, isToday, parseISO } from "date-fns";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { COLORS } from "../../assets/styles/colors";
 import { database } from "../../../firebaseConfig";
@@ -90,45 +90,33 @@ function Post({ navigation }) {
     getLeagues();
   }, []);
 
-  const onSubmit = async (data) => {
-    const user = await AsyncStorage.getItem("user");
+  const updateStorage = onValue(
+    ref(database, `user/${userId}`),
+    async (snapshot) => {
+      try {
+        const { name, username } = snapshot.val();
 
-    const updateStorage = onValue(
-      ref(database, `user/${userId}`),
-      async (snapshot) => {
-        try {
-          const { name, username } = snapshot.val();
+        await AsyncStorage.setItem("user", JSON.stringify({ name, username }));
 
-          await AsyncStorage.setItem(
-            "user",
-            JSON.stringify({ name, username })
-          );
+        return { name, username };
+      } catch (error) {
+        console.error(error);
 
-          return { name, username };
-        } catch (error) {
-          console.error(error);
-
-          return { name: "ERROR", username: "ERROR" };
-        }
+        return { name: "ERROR", username: "ERROR" };
       }
-    );
+    }
+  );
 
-    const objPost = {
-      [uuidv4()]: {
-        postDate: new Date(),
-        user: user ? JSON.parse(user) : updateStorage(),
-        ...data,
-      },
-    };
-
+  const updatePost = (objPost) => {
     try {
       update(ref(database, `post/${userId}`), objPost);
     } catch (error) {
       console.error(error);
     }
+  };
 
-    const date =
-      Platform.OS === "web" ? parseISO(data.dateMatch) : data.dateMatch;
+  const updateFeed = ({ dateMatch, objPost }) => {
+    const date = Platform.OS === "web" ? parseISO(dateMatch) : dateMatch;
 
     const today = new Date();
     // TODO: Create a script to delete feed
@@ -139,6 +127,23 @@ function Post({ navigation }) {
         console.error(error);
       }
     }
+  };
+
+  const onSubmit = async (data) => {
+    const user = await AsyncStorage.getItem("user");
+
+    const objPost = {
+      [uuidv4()]: {
+        postDate: new Date(),
+        user: user ? JSON.parse(user) : updateStorage(),
+        ...data,
+      },
+    };
+
+    updatePost(objPost);
+    updateFeed({ dateMatch: data.dateMatch, objPost });
+
+    navigation.push("Tabs");
   };
 
   return (
