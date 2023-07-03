@@ -1,14 +1,14 @@
-import { StyleSheet, View } from "react-native";
+import { ScrollView, StyleSheet, View } from "react-native";
 import { Avatar, Button, Text } from "react-native-paper";
 import { LinearGradient } from "expo-linear-gradient";
 import { useEffect, useState } from "react";
 import { ref, onValue, set } from "firebase/database";
 import { WrapperScreenTabs } from "../../components/WrapperScreenTabs";
 import { COLORS } from "../../assets/styles/colors";
-import { Card } from "../../components/Card";
 import { database } from "../../../firebaseConfig";
 import { useUser } from "../../context/useUser";
 import { buttonProperties as buttonPropertiesFn } from "./utils";
+import { Posts } from "./components/posts";
 
 const styles = StyleSheet.create({
   container: {
@@ -37,7 +37,6 @@ const styles = StyleSheet.create({
 
 export default function User({ navigation, route }) {
   const [user, setUser] = useState({});
-  const [posts, setPosts] = useState([]);
   const [following, setFollowing] = useState([]);
   const [followers, setFollowers] = useState([]);
   const [isAFollower, setIsAFollower] = useState(false);
@@ -92,29 +91,6 @@ export default function User({ navigation, route }) {
   }, []);
 
   useEffect(() => {
-    const starCountRef = ref(database, `post/${ownerProfile}`);
-    onValue(starCountRef, (snapshot) => {
-      try {
-        const data = snapshot.val();
-
-        if (data) {
-          const transformResponse = Object.entries(data).map(
-            ([key, value]) => ({
-              user: key,
-              postId: Object.keys(value)[0],
-              post: Object.values(value)[0],
-            })
-          );
-
-          setPosts(transformResponse);
-        }
-      } catch (error) {
-        console.error(error);
-      }
-    });
-  }, []);
-
-  useEffect(() => {
     const starCountRef = ref(database, `follows/${ownerProfile}`);
     onValue(starCountRef, (snapshot) => {
       try {
@@ -139,35 +115,37 @@ export default function User({ navigation, route }) {
 
   return (
     <WrapperScreenTabs openPost={openPost}>
-      <LinearGradient
-        colors={[COLORS.SECONDARY, "transparent"]}
-        style={styles.container}
-      >
-        <Avatar.Image size={24} source={require("../../assets/favicon.png")} />
-        <Text style={styles.title}>{user?.name}</Text>
-        <Text>@{user?.username}</Text>
-        <View style={styles.containerButtonsToFollow}>
-          <Text>Seguidores {followers.length}</Text>
-          <Text>| </Text>
-          <Text>Seguindo {following.length}</Text>
-        </View>
-        <View style={styles.containerButtonsToFollow}>
-          <Button
-            mode="elevated"
-            size={32}
-            onPress={buttonProperties.onPress}
-            buttonColor={buttonProperties.color}
-            textColor={buttonProperties.textColor}
-            icon={buttonProperties.icon}
-          >
-            {buttonProperties.name}
-          </Button>
-        </View>
-      </LinearGradient>
-
-      {posts.map((post) => (
-        <Card key={post.postId} {...post} />
-      ))}
+      <ScrollView scrollEnabled nestedScrollEnabled>
+        <LinearGradient
+          colors={[COLORS.SECONDARY, "transparent"]}
+          style={styles.container}
+        >
+          <Avatar.Image
+            size={24}
+            source={require("../../assets/favicon.png")}
+          />
+          <Text style={styles.title}>{user?.name}</Text>
+          <Text>@{user?.username}</Text>
+          <View style={styles.containerButtonsToFollow}>
+            <Text>Seguidores {followers.length}</Text>
+            <Text>| </Text>
+            <Text>Seguindo {following.length}</Text>
+          </View>
+          <View style={styles.containerButtonsToFollow}>
+            <Button
+              mode="elevated"
+              size={32}
+              onPress={buttonProperties.onPress}
+              buttonColor={buttonProperties.color}
+              textColor={buttonProperties.textColor}
+              icon={buttonProperties.icon}
+            >
+              {buttonProperties.name}
+            </Button>
+          </View>
+        </LinearGradient>
+        <Posts ownerProfile={ownerProfile} />
+      </ScrollView>
     </WrapperScreenTabs>
   );
 }
