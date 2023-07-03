@@ -12,7 +12,7 @@ import "react-native-get-random-values";
 import { v4 as uuidv4 } from "uuid";
 import { useForm, Controller } from "react-hook-form";
 import { useEffect, useState } from "react";
-import { isAfter, isToday, parseISO } from "date-fns";
+import { isAfter, isToday, parseISO, format } from "date-fns";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { COLORS } from "../../assets/styles/colors";
 import { database } from "../../../firebaseConfig";
@@ -134,7 +134,8 @@ function Post({ navigation }) {
 
     const objPost = {
       [uuidv4()]: {
-        postDate: new Date(),
+        postDate: format(new Date(), "dd/MM/yy"),
+        dateMatch: format(new Date(data.dateMatch), "dd/MM/yy"),
         user: user ? JSON.parse(user) : updateStorage(),
         ...data,
       },
