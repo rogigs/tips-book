@@ -45,7 +45,7 @@ const styles = StyleSheet.create({
   },
 });
 
-function Input({ control, name }) {
+function Input({ control, name, required = false }) {
   return (
     <Controller
       control={control}
@@ -58,7 +58,7 @@ function Input({ control, name }) {
         />
       )}
       name={name}
-      rules={{ required: true }}
+      rules={{ required }}
     />
   );
 }
@@ -138,6 +138,7 @@ function Post({ navigation }) {
         dateMatch: format(new Date(data.dateMatch), "dd/MM/yy"),
         user: user ? JSON.parse(user) : updateStorage(),
         ...data,
+        comment: data?.comment ?? "",
       },
     };
 
@@ -171,9 +172,9 @@ function Post({ navigation }) {
       )}
 
       <Text style={styles.titleText}>Quem irá se enfrentar ?</Text>
-      <Input control={control} name="teams" />
-      <Text style={styles.titleText}>Adicione um comentário</Text>
-      <Input control={control} name="comment" />
+      <Input required control={control} name="teams" />
+      <Text style={styles.titleText}>Odd</Text>
+      <Input required control={control} name="odds" />
       <Text style={styles.titleText}>Qual foi o resultado ?</Text>
       <Controller
         control={control}
@@ -217,6 +218,9 @@ function Post({ navigation }) {
         )}
         name="dateMatch"
       />
+
+      <Text style={styles.titleText}>Adicione um comentário</Text>
+      <Input control={control} name="comment" />
 
       <View style={styles.wrapperIconSend}>
         <IconButton
