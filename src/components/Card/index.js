@@ -20,7 +20,7 @@ export function Card({
   user: { name, username },
   comment,
   league,
-  teamsMatch,
+  teams,
   postDate,
 }) {
   return (
@@ -33,7 +33,7 @@ export function Card({
       />
       <CardPaper.Content>
         <Text variant="titleLarge">
-          {league} - {teamsMatch}
+          {league} - {teams}
         </Text>
         <Text variant="bodyMedium">{comment}</Text>
       </CardPaper.Content>

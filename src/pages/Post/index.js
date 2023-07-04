@@ -6,7 +6,7 @@ import {
   RadioButton,
   ActivityIndicator,
 } from "react-native-paper";
-import { View, StyleSheet, Platform } from "react-native";
+import { View, StyleSheet, Platform, ScrollView } from "react-native";
 import { ref, onValue, update } from "firebase/database";
 import "react-native-get-random-values";
 import { v4 as uuidv4 } from "uuid";
@@ -49,10 +49,9 @@ function Input({ control, name, required = false }) {
   return (
     <Controller
       control={control}
-      render={({ field: { onChange, onBlur, value } }) => (
+      render={({ field: { onChange, value } }) => (
         <TextInput
           style={styles.input}
-          onBlur={onBlur}
           onChangeText={(newValue) => onChange(newValue)}
           value={value || ""}
         />
@@ -70,7 +69,9 @@ function Post({ navigation }) {
   const {
     state: { userId },
   } = useUser();
-  const { setValue, handleSubmit, control, watch } = useForm();
+  const { setValue, handleSubmit, control, watch } = useForm({
+    mode: "onSubmit",
+  });
 
   useEffect(() => {
     const getLeagues = () => {
@@ -149,88 +150,90 @@ function Post({ navigation }) {
   };
 
   return (
-    <View style={styles.wrapper}>
-      <Text style={styles.titleText}>Selecione a liga</Text>
+    <ScrollView scrollEnabled nestedScrollEnabled>
+      <View style={styles.wrapper}>
+        <Text style={styles.titleText}>Selecione a liga</Text>
 
-      {/* TODO: This is not off the best UX */}
-      {loading ? (
-        <ActivityIndicator />
-      ) : (
-        <>
-          {leagues.map((league) => (
-            <Chip
-              key={league}
-              icon="soccer-field"
-              elevated
-              style={watch("league") === league && styles.chip}
-              onPress={() => setValue("league", league)}
+        {/* TODO: This is not off the best UX */}
+        {loading ? (
+          <ActivityIndicator />
+        ) : (
+          <>
+            {leagues.map((league) => (
+              <Chip
+                key={league}
+                icon="soccer-field"
+                elevated
+                style={watch("league") === league && styles.chip}
+                onPress={() => setValue("league", league)}
+              >
+                {league}
+              </Chip>
+            ))}
+          </>
+        )}
+
+        <Text style={styles.titleText}>Quem irá se enfrentar ?</Text>
+        <Input required control={control} name="teams" />
+        <Text style={styles.titleText}>Odd</Text>
+        <Input required control={control} name="odds" />
+        <Text style={styles.titleText}>Qual foi o resultado ?</Text>
+        <Controller
+          control={control}
+          render={({ field: { onChange, value } }) => (
+            <RadioButton.Group
+              onValueChange={(newValue) => onChange(newValue)}
+              value={value}
             >
-              {league}
-            </Chip>
-          ))}
-        </>
-      )}
-
-      <Text style={styles.titleText}>Quem irá se enfrentar ?</Text>
-      <Input required control={control} name="teams" />
-      <Text style={styles.titleText}>Odd</Text>
-      <Input required control={control} name="odds" />
-      <Text style={styles.titleText}>Qual foi o resultado ?</Text>
-      <Controller
-        control={control}
-        render={({ field: { onChange, value } }) => (
-          <RadioButton.Group
-            onValueChange={(newValue) => onChange(newValue)}
-            value={value}
-          >
-            <View style={styles.wrapperRadio}>
-              <RadioButton value="Green" />
-              <Text>Green</Text>
-            </View>
-            <View style={styles.wrapperRadio}>
-              <RadioButton value="Half green" />
-              <Text>Half Green</Text>
-            </View>
-            <View style={styles.wrapperRadio}>
-              <RadioButton value="Red" />
-              <Text>Red</Text>
-            </View>
-            <View style={styles.wrapperRadio}>
-              <RadioButton value="Half red" />
-              <Text>Half red</Text>
-            </View>
-            <View style={styles.wrapperRadio}>
-              <RadioButton value="Cashout" />
-              <Text>Cashout</Text>
-            </View>
-          </RadioButton.Group>
-        )}
-        name="result"
-        rules={{ required: true }}
-      />
-      <Text style={styles.titleText}>Data da partida ?</Text>
-      <Controller
-        control={control}
-        render={({ field: { onChange, value } }) => (
-          <View style={styles.wrapperRadio}>
-            <DatePickerMy value={value} onChange={onChange} />
-          </View>
-        )}
-        name="dateMatch"
-      />
-
-      <Text style={styles.titleText}>Adicione um comentário</Text>
-      <Input control={control} name="comment" />
-
-      <View style={styles.wrapperIconSend}>
-        <IconButton
-          icon="send"
-          iconColor={COLORS.PRIMARY}
-          size={32}
-          onPress={handleSubmit(onSubmit)}
+              <View style={styles.wrapperRadio}>
+                <RadioButton value="Green" />
+                <Text>Green</Text>
+              </View>
+              <View style={styles.wrapperRadio}>
+                <RadioButton value="Half green" />
+                <Text>Half Green</Text>
+              </View>
+              <View style={styles.wrapperRadio}>
+                <RadioButton value="Red" />
+                <Text>Red</Text>
+              </View>
+              <View style={styles.wrapperRadio}>
+                <RadioButton value="Half red" />
+                <Text>Half red</Text>
+              </View>
+              <View style={styles.wrapperRadio}>
+                <RadioButton value="Cashout" />
+                <Text>Cashout</Text>
+              </View>
+            </RadioButton.Group>
+          )}
+          name="result"
+          rules={{ required: true }}
         />
+        <Text style={styles.titleText}>Data da partida ?</Text>
+        <Controller
+          control={control}
+          render={({ field: { onChange, value } }) => (
+            <View style={styles.wrapperRadio}>
+              <DatePickerMy value={value} onChange={onChange} />
+            </View>
+          )}
+          name="dateMatch"
+        />
+
+        <Text style={styles.titleText}>Adicione um comentário</Text>
+        <Input control={control} name="comment" />
+
+        <View style={styles.wrapperIconSend}>
+          <IconButton
+            icon="send"
+            iconColor={COLORS.PRIMARY}
+            size={32}
+            onPress={handleSubmit(onSubmit)}
+          />
+        </View>
       </View>
-    </View>
+    </ScrollView>
   );
 }
 
