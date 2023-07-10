@@ -3,10 +3,10 @@ import { NavigationContainer, DefaultTheme } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useEffect, useState } from "react";
 
+import { PaperProvider } from "react-native-paper";
 import { UserProvider } from "./src/context/useUser";
-import { Auth as AuthMobile } from "./src/pages/Auth/mobile";
-import { Auth as AuthWeb } from "./src/pages/Auth/web";
 
+import { Routes } from "./src/routes";
 
 const PERSISTENCE_KEY = "Login";
 
@@ -22,7 +22,7 @@ function App() {
   const [isReady, setIsReady] = useState(false);
   const [initialState, setInitialState] = useState();
 
-  const isWeb = Platform.OS === "web"
+  const isWeb = Platform.OS === "web";
 
   useEffect(() => {
     const restoreState = async () => {
@@ -55,17 +55,23 @@ function App() {
   }
 
   return (
-    <UserProvider>
-      {isWeb ? <AuthWeb /> :
+    <PaperProvider theme={theme}>
+      <UserProvider>
         <NavigationContainer
           theme={theme}
           initialState={initialState}
-          onStateChange={(state) => AsyncStorage.setItem(PERSISTENCE_KEY, JSON.stringify(state))}
+          onStateChange={(state) =>
+            AsyncStorage.setItem(PERSISTENCE_KEY, JSON.stringify(state))
+          }
+          documentTitle={{
+            formatter: () =>
+              "Tips Book",
+          }}
         >
-          <AuthMobile />
+          <Routes />
         </NavigationContainer>
-      }
-    </UserProvider>
+      </UserProvider>
+    </PaperProvider>
   );
 }
 

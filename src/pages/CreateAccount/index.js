@@ -67,6 +67,7 @@ function CreateAccount({ navigation }) {
         value={email}
         onChangeText={onChangeEmail}
         style={styles.textInput}
+        mode="outlined"
       />
 
       <TextInput
@@ -74,6 +75,8 @@ function CreateAccount({ navigation }) {
         value={password}
         onChangeText={onChangePassword}
         style={styles.textInput}
+        mode="outlined"
+        secureTextEntry
       />
 
       <Button

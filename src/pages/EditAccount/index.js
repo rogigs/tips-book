@@ -66,10 +66,10 @@ export default function EditAccount({ navigation, route }) {
   return (
     <WrapperScreenTabs openPost={openPost}>
       <View style={styles.wrapper}>
-        <Text style={styles.titleText}>Nome de usuário</Text>
-        <TextInput value={name} onChangeText={onChangeName} />
+        <Text style={styles.titleText} >Nome de usuário</Text>
+        <TextInput value={name} onChangeText={onChangeName} mode="outlined" />
         <Text style={styles.titleText}>Nome de username</Text>
-        <TextInput value={username} onChangeText={onChangeUsername} />
+        <TextInput value={username} onChangeText={onChangeUsername} mode="outlined" />
 
         <View style={styles.wrapperIconSend}>
           <IconButton

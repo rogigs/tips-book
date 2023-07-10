@@ -48,6 +48,8 @@ export default function Home({ navigation }) {
     });
   }, []);
 
+
+
   if (loading) {
     return <CircularProgress />;
   }
