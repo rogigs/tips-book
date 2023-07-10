@@ -45,7 +45,7 @@ const styles = StyleSheet.create({
   },
 });
 
-function Input({ control, name, required = false }) {
+function Input({ control, name, required = false, ...props }) {
   return (
     <Controller
       control={control}
@@ -54,6 +54,8 @@ function Input({ control, name, required = false }) {
           style={styles.input}
           onChangeText={(newValue) => onChange(newValue)}
           value={value || ""}
+          mode="outlined"
+          {...props}
         />
       )}
       name={name}
@@ -176,7 +178,8 @@ function Post({ navigation }) {
         <Text style={styles.titleText}>Quem irá se enfrentar ?</Text>
         <Input required control={control} name="teams" />
         <Text style={styles.titleText}>Odd</Text>
-        <Input required control={control} name="odds" />
+        <Input required control={control} name="odds"
+        />
         <Text style={styles.titleText}>Qual foi o resultado ?</Text>
         <Controller
           control={control}

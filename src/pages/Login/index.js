@@ -70,6 +70,7 @@ function Login({ navigation }) {
         style={{ width: 200, height: 200 }}
       />
       <TextInput
+        mode="outlined"
         label="Email"
         value={email}
         onChangeText={onChangeEmail}
@@ -77,10 +78,12 @@ function Login({ navigation }) {
       />
 
       <TextInput
+        mode="outlined"
         label="Senha"
         value={password}
         onChangeText={onChangePassword}
         style={styles.textInput}
+        secureTextEntry
       />
 
       <Button
